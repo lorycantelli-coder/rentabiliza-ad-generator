@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&family=Playfair+Display:wght@700&family=Roboto+Mono:wght@400&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-gold-premium: #DCA405;
+  --color-navy-deep: #040812;
+  --color-pure-white: #FFFFFF;
+  --color-gray-slate: #94A3B8;
+  --color-success-green: #10B981;
+
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Outfit", sans-serif;
+  --font-mono: "Roboto Mono", monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-navy-deep);
+  color: var(--color-pure-white);
+}
+
+@layer components {
+  .prose-gold {
+    --tw-prose-body: var(--color-pure-white);
+    --tw-prose-headings: var(--color-gold-premium);
+    --tw-prose-links: var(--color-gold-premium);
+    --tw-prose-bold: var(--color-pure-white);
+    --tw-prose-counters: var(--color-gray-slate);
+    --tw-prose-bullets: var(--color-gold-premium);
+    --tw-prose-hr: rgba(255, 255, 255, 0.1);
+    --tw-prose-quotes: var(--color-gray-slate);
+    --tw-prose-quote-borders: var(--color-gold-premium);
+    --tw-prose-captions: var(--color-gray-slate);
+    --tw-prose-code: var(--color-gold-premium);
+    --tw-prose-pre-code: var(--color-pure-white);
+    --tw-prose-pre-bg: rgba(0, 0, 0, 0.5);
+    --tw-prose-th-borders: rgba(255, 255, 255, 0.1);
+    --tw-prose-td-borders: rgba(255, 255, 255, 0.1);
+  }
+  
+  .prose-gold h1, .prose-gold h2, .prose-gold h3, .prose-gold h4 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+  }
+}
