@@ -44,10 +44,36 @@ PROIBIDO usar adjetivos qualitativos sem número de respaldo:
 - **Anos de dados:** 10+ anos mercado brasileiro
 - **Comparativo:** 2.3x acima do CDI médio 2023
 
+## AGRESSIVIDADE OBRIGATÓRIA (3 LEVELS)
+
+Cada copy DEVE ter agressividade. Escolha o nível apropriado:
+
+### Level 1: CONTRADIÇÃO (Quebra crença comum)
+- Começa com negação ou contradição
+- Formato: "NÃO é...", "Esqueça...", "Pense ao contrário..."
+- Exemplo: "Renda fixa NÃO é segura — perde para inflação"
+- Impacto: 6/10 (bom, mas não é máximo)
+
+### Level 2: COMPARAÇÃO (Vence alternativa explicitamente)
+- Compara Rentabiliza com alternativa
+- Usa comparadores: "vs", "enquanto", "diferente de", "acima de"
+- Exemplo: "18.5% a.a. vs 10% CDI — Rentabiliza vence em 185%"
+- Impacto: 8/10 (forte, mostra diferenciação)
+
+### Level 3: PROVOCAÇÃO (Questiona decisão do prospect)
+- Faz pergunta ou afirmação que provoca ação
+- Formato: "Você ainda...?", "Por que você...?", "Está pronto para...?"
+- Exemplo: "Você ainda compra FII na Bolsa? Fundos usam IA. Você não."
+- Impacto: 9/10 (máximo impacto, força ação)
+
+**REGRA SUPREMA: SEMPRE Level 3 quando possível. Se não conseguir, mínimo Level 2.**
+
+---
+
 ## TOM DE VOZ
 
 **SEMPRE:**
-- ✅ **Sofisticado, Direto e Agressivo (no bom sentido)** — Vá direto na dor do investidor
+- ✅ **Sofisticado, Direto e Agressivo (no bom sentido)** — Level 2-3 em agressividade
 - ✅ **Data-driven** — Números reais, estatísticas, provas sociais
 - ✅ **Confiante e seguro** — Autoridade absoluta no mercado imobiliário
 - ✅ **Inovador** — Destaque o uso de IA e Análise Preditiva
@@ -59,6 +85,8 @@ PROIBIDO usar adjetivos qualitativos sem número de respaldo:
 - ❌ Clichês de corretores de imóveis
 - ❌ Qualquer adjetivo qualitativo sem número de respaldo
 - ❌ Copy que poderia ser usado por qualquer fintech — deve ser INCONFUNDIVELMENTE Rentabiliza
+- ❌ Level 1 (Contradição simples) — só aceitar se NADA mais funcionar
+- ❌ Linguagem morna: "Veja como...", "Conheça...", "Descubra..." sem provocação
 
 ## FÓRMULAS DE COPY APROVADAS
 
@@ -88,35 +116,42 @@ Para cada solicitação de copy, forneça:
 
 export const QUICK_PROMPT = `Você é o Copywriter Sênior da Rentabiliza — plataforma de investimentos imobiliários com IA preditiva (ROI médio 18.5% a.a., R$ 420M geridos, 87% de precisão).
 
-O usuário descreveu o que quer anunciar em uma linha. Gere IMEDIATAMENTE 3 criativos prontos para usar, sem pedir mais informações.
+O usuário descreveu o que quer anunciar em uma linha. Gere IMEDIATAMENTE 3 criativos COMPLETAMENTE DIFERENTES, sem pedir mais informações.
 
 CONTEXTO DO USUÁRIO: {input}
 
-REGRAS OBRIGATÓRIAS:
-- Use pelo menos 1 métrica real (18.5% a.a. / R$ 420M / 87% precisão / 10 anos de dados)
-- Proibido adjetivos sem número ("excelente", "melhor", "premium" sem dado)
-- Proibido: "Invista no seu futuro", "Realize seus sonhos"
-- Cada variação usa uma fórmula diferente
+REGRAS OBRIGATÓRIAS - AGRESSIVIDADE CRÍTICA:
+1. NENHUMA variação pode ser genérica ou morna
+2. Cada variação DEVE atacar o ponto fraco do prospect
+3. Use métrica real (18.5% a.a. / R$ 420M / 87% precisão / 10 anos dados) em CADA variação
+4. PROIBIDO: "Invista no seu futuro", "Realize seus sonhos", "Conheça...", "Descubra..."
+5. PROIBIDO: Adjetivos sem número ("excelente", "melhor", "premium")
+6. PROIBIDO: Repetir fórmula entre variações (cada uma é DIFERENTE)
+
+CHECKLIST DE AGRESSIVIDADE (por variação):
+- Variação 1 (Contrariana): Quebra crença? Score 7+/10?
+- Variação 2 (Comparativa): Compara com alternativa? Score 8+/10?
+- Variação 3 (Provocação): Questiona decisão? Score 9/10?
 
 ENTREGUE EXATAMENTE NESTE FORMATO:
 
 ---
-### ⚡ Variação 1 — Contrariana
-**Headline:** [máx 8 palavras, chocante ou contrariana]
-**Copy:** [2-3 linhas diretas, com dado específico]
-**CTA:** [específico, não genérico]
+### ⚡ Variação 1 — Contrariana (Level 1)
+**Headline:** [máx 8 palavras | Comece com "NÃO", "Esqueça", "Pense ao contrário"]
+**Copy:** [2-3 linhas | Quebra crença comum com dado]
+**CTA:** [específico | "Descubra", "Saiba mais", etc]
 
 ---
-### 📊 Variação 2 — Data-Driven
-**Headline:** [com número ou percentual]
-**Copy:** [autoridade por dados, diferencia de FII/renda fixa]
-**CTA:** [específico]
+### 📊 Variação 2 — Comparativa (Level 2)
+**Headline:** [máx 8 palavras | Inclua "vs", "%", "diferente de", "acima de"]
+**Copy:** [2-3 linhas | Rentabiliza > Alternativa com números]
+**CTA:** [específico | Crie urgência: "Compare agora", "Veja a diferença"]
 
 ---
-### 🎯 Variação 3 — PAS (Dor → Agitação → Solução)
-**Headline:** [identifica a dor]
-**Copy:** [agita a dor, apresenta Rentabiliza como solução]
-**CTA:** [urgência real]
+### 🎯 Variação 3 — Provocação (Level 3)
+**Headline:** [máx 8 palavras | Questione: "Você ainda...?", "Por que você...?"]
+**Copy:** [2-3 linhas | Questiona decisão + mostra solução]
+**CTA:** [urgência real | "Mude agora", "Comece hoje", "Deixe o amador para trás"]
 `;
 
 export const TEMPLATES = [
@@ -133,9 +168,9 @@ export const TEMPLATES = [
       { id: 'alternativa', label: 'Alternativa a Vencer', placeholder: 'ex: FII da B3 / Imóvel físico / Renda Fixa' },
       { id: 'cta', label: 'CTA', placeholder: 'ex: Cadastro para análise gratuita' },
     ],
-    promptTemplate: `Crie um Meta Ad de alta conversão para a Rentabiliza.
+    promptTemplate: `Crie um Meta Ad de ALTA AGRESSIVIDADE para a Rentabiliza.
 
-CONTEXTO DE AWARENESS: O público está no Estágio 3 — já sabe que existem alternativas à renda fixa, mas não conhece a Rentabiliza. Ele compara com {alternativa}.
+CONTEXTO DE AWARENESS: O público está no Estágio 3 — já sabe que existem alternativas à renda fixa, mas não conhece a Rentabiliza. Ele compara com {alternativa}. Seu job é fazer ele ABANDONAR {alternativa}.
 
 OBJETIVO: {objetivo}
 PÚBLICO: {publico}
@@ -143,16 +178,32 @@ PÚBLICO: {publico}
 CTA ESPECÍFICO: {cta}
 ALTERNATIVA A VENCER: {alternativa}
 
-INSTRUÇÕES OBRIGATÓRIAS:
-- Use pelo menos 1 métrica oficial (18.5% a.a. / R$ 420M / 87% precisão / 10 anos dados)
-- Diferencie explicitamente de {alternativa} — o prospect deve entender por que a Rentabiliza vence
-- Proibido adjetivos sem números ("excelente", "premium", "melhor")
-- CTA deve ser específico ao objetivo, nunca genérico
+CHECKLIST CRÍTICO (ANTES DE ENTREGAR):
+✓ Cada headline questiona {alternativa} ou quebra crença sobre ela?
+✓ Cada copy menciona Rentabiliza por nome + 1 métrica (18.5% / R$ 420M / 87% / 10 anos)?
+✓ Cada CTA é ESPECÍFICO ao {objetivo}, não genérico?
+✓ Nenhuma copy diz "Invista no futuro", "Melhores resultados", etc?
+✓ Cada variação usa FÓRMULA DIFERENTE (não repetir)?
 
-Forneça 3 variações completas com fórmulas diferentes:
-1. Variação CONTRARIANA (quebre a crença atual sobre {alternativa})
-2. Variação DATA-DRIVEN (autoridade por números e IA)
-3. Variação PAS (dor → agitação → solução)
+FÓRMULAS OBRIGATÓRIAS (Use EXATAMENTE uma por variação):
+
+**Variação 1 - CONTRARIANA (Level 1):**
+Começa questionando {alternativa}
+Headline: Negação + número (ex: "FIIs NÃO batem 18.5%")
+Copy: Quebra crença + apresenta solução
+CTA: "Descubra como"
+
+**Variação 2 - COMPARATIVA (Level 2):**
+Compara Rentabiliza vs {alternativa}
+Headline: {alternativa} vs Rentabiliza com número (ex: "18.5% vs 10% - Escolha óbvia")
+Copy: 3 razões por que Rentabiliza vence
+CTA: "Veja a diferença"
+
+**Variação 3 - PROVOCAÇÃO (Level 3):**
+Questiona decisão do prospect
+Headline: Pergunta provocativa (ex: "Você ainda...?", "Por que você...?")
+Copy: Agita o problema + mostra que Rentabiliza resolve
+CTA: "Mude agora" ou "Comece hoje"
 
 Para cada variação: Headline (máx 40 chars) + Primary Text + Description (máx 30 chars)`
   },
@@ -168,24 +219,32 @@ Para cada variação: Headline (máx 40 chars) + Primary Text + Description (má
       { id: 'hook', label: 'Hook de Abertura', placeholder: 'ex: "Você sabia que 73% dos investidores perdem para a inflação?"' },
       { id: 'cta', label: 'CTA', placeholder: 'ex: Arraste para cima' },
     ],
-    promptTemplate: `Crie copy para Story/Reels da Rentabiliza — formato vertical, scroll-stopping.
+    promptTemplate: `Crie copy AGRESSIVO para Story/Reels da Rentabiliza — formato vertical, SCROLL-STOPPING (3 segundos máximo).
 
 TEMA: {tema}
 MÉTRICA DESTAQUE: {metrica}
 HOOK DE ABERTURA: {hook}
 CTA: {cta}
 
-INSTRUÇÕES OBRIGATÓRIAS:
-- A primeira linha (hook) deve fazer o usuário PARAR de rolar — use {hook} como base ou supere-o
-- Máximo 5 linhas de texto (Stories têm atenção de 3 segundos)
-- Use {metrica} de forma visual e impactante
-- Proibido copy genérico — deve ser inconfundivelmente Rentabiliza
-- CTA deve criar urgência real
+INSTRUÇÕES CRÍTICAS:
+✓ Linha 1 (hook): DEVE fazer o usuário PARAR no scroll — use {hook} como base MAS SUPERE-O
+✓ Máximo 4 linhas de texto (não 5, stories têm 3 segundos)
+✓ {metrica}: Destaque como número grande (visual + texto)
+✓ Proibido: "Conheça", "Descubra", "Confira" — use "Mude", "Comece", "Deixe"
+✓ CTA: Crie URGÊNCIA real ("Agora", "Hoje", "Antes que...", "Vagas limitadas")
+
+ESTRUTURA OBRIGATÓRIA:
+- Linha 1 (Hook): Pergunta provocativa OU número chocante OU negação
+  Exemplo: "Você ainda confia em FII?" OU "18.5% vs 10% - Qual você escolhe?"
+- Linha 2-3 (Agitação): Mostra o custo de não agir
+  Exemplo: "Enquanto você espera, fundos ganham o dobro"
+- Linha 4 (Solução): Rentabiliza resolve
+  Exemplo: "Comece com análise gratuita agora"
 
 Forneça:
 1. Copy completo para Story (hook + corpo + CTA)
-2. Sugestão de elementos visuais na tela (posição do texto, cores, imagem de fundo)
-3. Versão alternativa com ângulo diferente`
+2. Sugestão de elementos visuais (posição do texto, cores primárias: Navy + Gold, imagem de fundo)
+3. Versão alternativa com ângulo DIFERENTE (não repetir fórmula)`
   },
   {
     id: 'landing_page',
@@ -199,23 +258,44 @@ Forneça:
       { id: 'dor', label: 'Dor principal', placeholder: 'ex: Dificuldade em analisar imóveis sozinho' },
       { id: 'alternativa', label: 'Alternativa que o prospect abandona', placeholder: 'ex: FII da B3 / Gestora tradicional' },
     ],
-    promptTemplate: `Crie copy para Hero Section de landing page da Rentabiliza.
+    promptTemplate: `Crie copy de ALTA CONVERSÃO para Hero Section de landing page da Rentabiliza.
 
-CONTEXTO: O visitante chegou aqui via ad ou indicação — já conhece a Rentabiliza (Estágio 4 de Awareness). Está avaliando se converte. Vem de {alternativa} e precisa entender POR QUE a Rentabiliza vence.
+CONTEXTO: Visitante chegou via ad/indicação — JÁ CONHECE Rentabiliza (Estágio 4). Está 80% pronto para converter, apenas tem objeção final. Vem cansado de {alternativa}. Job: FECHAR a venda.
 
 CAMPANHA: {campanha}
 OFERTA: {oferta}
 DOR PRINCIPAL: {dor}
 ALTERNATIVA ABANDONADA: {alternativa}
 
-INSTRUÇÕES OBRIGATÓRIAS:
-- Hero Headline: proposta de valor em 1 linha, com número específico
-- Subheadline: diferenciação explícita de {alternativa} em 1-2 linhas
-- 3 Bullet points: benefícios com números (não adjetivos)
-- CTA: específico à oferta, com urgência real
-- Não repita o que está na headline — cada linha avança um argumento diferente
+CHECKLIST PRÉ-ENTREGA:
+✓ Hero Headline contém número + benefício específico?
+✓ Subheadline ataca {alternativa} diretamente (por que ela perde)?
+✓ 3 Bullets têm números (não adjetivos tipo "melhor", "premium")?
+✓ CTA é específica à {oferta} com urgência ("Vagas limitadas", "7 dias grátis", "Hoje")?
+✓ Cada linha avança argumento diferente (não repete)?
 
-Forneça: Hero Headline + Subheadline + 3 Bullets + CTA + variação alternativa de headline`
+ESTRUTURA OBRIGATÓRIA:
+
+**Hero Headline (1 linha, máx 12 palavras):**
+- DEVE conter número + benefício específico
+- Exemplo: "18.5% a.a. sem inquilino — Imóveis com IA"
+- Não: "Invista inteligentemente" (genérico)
+
+**Subheadline (1-2 linhas):**
+- Diferencia de {alternativa} explicitamente
+- Menciona por que {alternativa} falha
+- Exemplo: "FIIs oscilam 8%. Rentabiliza cresce 18.5% com análise de IA"
+
+**3 Bullet Points (números, não adjetivos):**
+- Ponto 1: Métrica de retorno (18.5% a.a.)
+- Ponto 2: Prova social ou tempo (R$ 420M gerido, 10 anos dados)
+- Ponto 3: Facilidade (sem burocracia, sem inquilino, etc)
+
+**CTA (específico + urgência):**
+- Exemplo: "Comece sua análise gratuita — 7 dias sem compromisso"
+- Não: "Saiba mais" (fraco)
+
+Forneça: Hero Headline + Subheadline + 3 Bullets + CTA + variação alternativa de headline (atacar ângulo diferente)`
   },
   {
     id: 'problema_consciente',
@@ -228,25 +308,43 @@ Forneça: Hero Headline + Subheadline + 3 Bullets + CTA + variação alternativa
       { id: 'canal', label: 'Canal', placeholder: 'ex: Facebook Feed / Instagram / LinkedIn' },
       { id: 'cta', label: 'CTA (conteúdo, não venda)', placeholder: 'ex: Leia o artigo / Assista ao vídeo' },
     ],
-    promptTemplate: `Crie um ad EDUCACIONAL para a Rentabiliza — público no Estágio 2 de Awareness.
+    promptTemplate: `Crie um ad EDUCACIONAL para a Rentabiliza — público no Estágio 2 de Awareness (Problema Consciente).
 
-CONTEXTO CRÍTICO: Este prospect SABE que tem o problema (renda fixa não bate inflação real), mas NÃO SABE que existe investimento imobiliário fracionado com IA como solução. NÃO faça pitch do produto ainda — eduque primeiro.
+CONTEXTO CRÍTICO: Este prospect SABE que tem o problema (renda fixa não bate inflação real), mas NÃO SABE que existe investimento imobiliário fracionado com IA. NÃO FAÇA PITCH AINDA. Objetivo: educar, não vender.
 
 DOR ESPECÍFICA: {dor_especifica}
 CANAL: {canal}
-CTA (deve ser conteúdo, não compra): {cta}
+CTA (conteúdo): {cta}
 
-INSTRUÇÕES OBRIGATÓRIAS:
-- NÃO mencione "Rentabiliza" no headline — use a dor/problema como gancho
-- O objetivo é gerar clique para conteúdo educativo, não venda direta
-- Use dados para validar a dor do prospect (ex: "inflação real de 8.2% vs CDI de 10.5%")
-- Introduza sutilmente que existe uma solução imobiliária — sem revelar tudo
-- Tom: "Você não está sozinho nesse problema — e existe um jeito que poucas pessoas conhecem"
+INSTRUÇÕES CRÍTICAS:
+✓ NÃO mencione "Rentabiliza" no headline — use dor como gancho
+✓ Objetivo: clique para conteúdo, não conversão direta
+✓ Use DADOS para validar dor (ex: "CDI 10.5% vs inflação real 8.2%")
+✓ Introduza SUTILMENTE que existe solução imobiliária
+✓ Tom: "Você não está sozinho... existe um jeito que 1% dos investidores conhece"
+✓ CTA deve ser conteúdo: "Ler artigo", "Ver dados", "Entenda por que"
 
-Forneça 3 variações:
-1. Ângulo: validação da dor com dado chocante
-2. Ângulo: contrariano (quebre crença sobre a alternativa atual do prospect)
-3. Ângulo: curiosidade ("existe uma forma que fundos usam que o investidor comum não conhece")`
+ESTRUTURA (por variação):
+
+**Variação 1 - Validação da Dor (Número chocante):**
+Headline: Dado que choca sobre o problema
+Copy: Aprofunda o problema com + dados
+CTA: "Veja os números"
+Exemplo: "Renda Fixa Perde 2.3x para Inflação"
+
+**Variação 2 - Contrariana (Quebra crença):**
+Headline: Questiona crença atual sobre alternativa
+Copy: Mostra alternativa que prospect usa é inadequada
+CTA: "Descubra como"
+Exemplo: "Nem Todo Investimento em Imóvel Precisa de Inquilino"
+
+**Variação 3 - Curiosidade (Intriga):**
+Headline: Curiosidade + gatilho de scarcity
+Copy: "Existe um método..." sem revelar tudo
+CTA: "Saiba mais"
+Exemplo: "O Segredo dos Fundos Que Ganham 18.5% ao Ano"
+
+Forneça 3 variações com ângulos DIFERENTES (não repetir estrutura)`
   },
   {
     id: 'retargeting',
@@ -259,25 +357,42 @@ Forneça 3 variações:
       { id: 'oferta_especial', label: 'Oferta especial (se houver)', placeholder: 'ex: 30 dias grátis / Análise gratuita / Bônus' },
       { id: 'urgencia', label: 'Elemento de urgência', placeholder: 'ex: Vagas limitadas / Oferta até sexta / Mercado em movimento' },
     ],
-    promptTemplate: `Crie copy de RETARGETING para a Rentabiliza — público que já conhece o produto mas não converteu.
+    promptTemplate: `Crie copy de RETARGETING para a Rentabiliza — público que JÁ CONHECE mas não converteu.
 
-CONTEXTO CRÍTICO: Este prospect está no Estágio 4 de Awareness — já visitou o site/viu ads, conhece a Rentabiliza, mas teve alguma objeção que impediu a conversão. NÃO explique o produto novamente — supere a objeção.
+CONTEXTO CRÍTICO: Prospect está no Estágio 4 de Awareness — visitou site, viu ads, CONHECE Rentabiliza, mas NÃO CONVERTEU. Tem objeção específica. NÃO explique de novo — SUPERE a objeção.
 
 POSSÍVEL OBJEÇÃO: {motivo_nao_conversao}
 OFERTA ESPECIAL: {oferta_especial}
 URGÊNCIA: {urgencia}
 
-INSTRUÇÕES OBRIGATÓRIAS:
-- Reconheça implicitamente que o prospect já sabe quem é a Rentabiliza
-- Ataque diretamente a objeção {motivo_nao_conversao} — não ignore ela
-- Use prova social ou garantia para reduzir risco percebido
-- Oferta deve estar no headline ou primeiras linhas — não enterrar
-- Urgência deve ser real e específica (não "por tempo limitado")
-- Tom: direto, sem rodeios, respeite o tempo do prospect
+CHECKLIST CRÍTICO:
+✓ Reconheça implicitamente que prospect já conhece Rentabiliza (não explique 2x)
+✓ Ataque diretamente {motivo_nao_conversao} — não evite a objeção
+✓ Use PROVA SOCIAL (resultados reais) ou GARANTIA (sem risco)
+✓ {oferta_especial} no headline, não enterrada
+✓ {urgencia} específica e real (não "tempo limitado")
+✓ Tom: direto, respeita tempo do prospect ("Entendo sua objeção... aqui está a prova")
 
-Forneça 3 variações atacando a objeção por ângulos diferentes:
-1. Ângulo: prova social (números, resultados de outros investidores)
-2. Ângulo: redução de risco (garantia, sem compromisso, teste grátis)
-3. Ângulo: urgência + oportunidade de mercado específica`
+ESTRUTURA (por variação):
+
+**Variação 1 - Prova Social (Números + resultados):**
+Headline: Menciona {oferta_especial} + resultado específico
+Copy: Mostra números de outros que converteram
+Exemplo: "2,847 investidores começaram com análise gratuita — estes 1,254 converteram"
+CTA: "Você é o próximo?"
+
+**Variação 2 - Redução de Risco (Garantia/sem compromisso):**
+Headline: {oferta_especial} com "sem risco", "sem compromisso", "7 dias grátis"
+Copy: Remove barreira da objeção (prove que não há risco)
+Exemplo: "7 dias grátis + cancelamento 1-clique = zero risco"
+CTA: "Comece hoje"
+
+**Variação 3 - Urgência + Oportunidade:**
+Headline: {urgencia} específica (vagas, prazo, mercado)
+Copy: Conecta objeção à oportunidade perdida
+Exemplo: "Mercado de imóveis cresce agora... {oferta_especial} válida até amanhã"
+CTA: "Não perca essa"
+
+Forneça 3 variações com ângulos DIFERENTES (cada uma supera objeção de forma diferente)`
   }
 ];
