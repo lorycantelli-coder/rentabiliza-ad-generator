@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { TEMPLATES, QUICK_PROMPT } from './constants';
-import { generateAdCopy, generateImage } from './services/geminiService';
+import { TEMPLATES } from './constants';
+import { generateImage } from './services/geminiService';
+import { generateAdCopyWithValidation, generateQuickCopy } from './services/copyGenerationService';
 import { Loader2, Sparkles, Copy, Check, ChevronRight, LayoutTemplate, Image as ImageIcon, Download, Type, History, X, Zap, FileJson, ClipboardCheck, Zap as CompareIcon } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -211,18 +212,26 @@ export default function App() {
     setIsGeneratingCopy(true);
     setError(null);
     try {
-      let prompt = selectedTemplate.promptTemplate;
-      selectedTemplate.fields.forEach((field) => {
-        const value = formData[field.id] || `[${field.label} não informado]`;
-        prompt = prompt.replace(`{${field.id}}`, value);
-      });
-      const result = await generateAdCopy(prompt);
-      if (!result || result.trim() === '') {
+      const result = await generateAdCopyWithValidation(selectedTemplateId, formData);
+
+      if (!result.copy || result.copy.trim() === '') {
         throw new Error("A IA retornou uma resposta vazia. Tente mudar o contexto.");
       }
-      setGeneratedCopy(result);
+
+      // Show validation feedback if there were issues
+      if (result.issues.length > 0) {
+        console.warn('⚠️ Copy gerado com algumas advertências:', result.issues);
+      }
+
+      if (result.refined) {
+        console.log('✨ Copy foi refinado automaticamente para melhor qualidade');
+      }
+
+      console.log(`📊 Score de qualidade: ${result.validationScore.toFixed(1)}/10`);
+
+      setGeneratedCopy(result.copy);
       setSelectedVariation(null);
-      addToHistory(result, generatedImage, overlayText);
+      addToHistory(result.copy, generatedImage, overlayText);
     } catch (err: any) {
       setError(err.message || 'Ocorreu um erro ao gerar o copy.');
     } finally {
@@ -271,9 +280,14 @@ export default function App() {
       }
 
       try {
-        const copyRes = await generateAdCopy(copyPrompt);
-        if (copyRes && copyRes.trim() !== '') {
-          shortCopyResult = copyRes.replace(/["*]/g, '').trim();
+        const copyRes = await generateQuickCopy(copyPrompt);
+        if (copyRes && copyRes.copy && copyRes.copy.trim() !== '') {
+          // Extrai apenas a primeira variação para headline
+          const firstVariation = copyRes.copy.split('---')[1] || copyRes.copy;
+          const headlineMatch = firstVariation.match(/\*\*Headline:\*\*\s*(.+)/);
+          if (headlineMatch) {
+            shortCopyResult = headlineMatch[1].replace(/["*]/g, '').trim();
+          }
         }
       } catch (copyErr) {
         console.error("Erro ao gerar copy curta, usando fallback", copyErr);
@@ -296,14 +310,19 @@ export default function App() {
     setGeneratedCopy(null);
     setGeneratedImage(null);
     try {
-      const prompt = QUICK_PROMPT.replace('{input}', quickInput.trim());
-      const result = await generateAdCopy(prompt);
-      if (!result || result.trim() === '') {
+      const result = await generateQuickCopy(quickInput.trim());
+      if (!result.copy || result.copy.trim() === '') {
         throw new Error('A IA retornou uma resposta vazia. Tente reformular.');
       }
-      setGeneratedCopy(result);
+
+      // Show validation feedback
+      if (result.issues.length > 0) {
+        console.warn('⚠️ Variações geradas com avisos:', result.issues);
+      }
+
+      setGeneratedCopy(result.copy);
       setSelectedVariation(null);
-      addToHistory(result, null, '');
+      addToHistory(result.copy, null, '');
     } catch (err: any) {
       setError(err.message || 'Ocorreu um erro ao gerar o copy.');
     } finally {

@@ -1,5 +1,4 @@
 import { GoogleGenAI } from '@google/genai';
-import { SYSTEM_INSTRUCTION } from '../constants';
 
 let aiClient: GoogleGenAI | null = null;
 
@@ -12,25 +11,6 @@ function getAIClient(): GoogleGenAI {
     aiClient = new GoogleGenAI({ apiKey });
   }
   return aiClient;
-}
-
-export async function generateAdCopy(prompt: string): Promise<string> {
-  try {
-    const ai = getAIClient();
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: prompt,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.9,
-      },
-    });
-    
-    return response.text || 'Nenhuma resposta gerada.';
-  } catch (error) {
-    console.error('Error generating ad copy:', error);
-    throw new Error('Falha ao gerar o copy. Verifique o console para mais detalhes.');
-  }
 }
 
 export async function generateImage(prompt: string, aspectRatio: "1:1" | "16:9" | "9:16" = "1:1"): Promise<string> {
