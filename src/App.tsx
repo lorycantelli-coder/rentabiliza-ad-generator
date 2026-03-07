@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { TEMPLATES, QUICK_PROMPT } from './constants';
 import { generateAdCopy, generateImage } from './services/geminiService';
-import { Loader2, Sparkles, Copy, Check, ChevronRight, LayoutTemplate, Image as ImageIcon, Download, Type, History, X, Zap, FileJson, ClipboardCheck } from 'lucide-react';
+import { Loader2, Sparkles, Copy, Check, ChevronRight, LayoutTemplate, Image as ImageIcon, Download, Type, History, X, Zap, FileJson, ClipboardCheck, Zap as CompareIcon } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { RatingBar } from './components/RatingBar';
+import { CompareMode } from './components/CompareMode';
+import { useRating } from './hooks/useRating';
+import { RatingType } from './types/rating';
 
 interface ParsedVariation {
   title: string;
@@ -98,6 +102,11 @@ export default function App() {
   const [selectedVariation, setSelectedVariation] = useState<number | null>(null);
   const [copiedVariation, setCopiedVariation] = useState<number | null>(null);
   const [copiedClean, setCopiedClean] = useState(false);
+
+  // Rating System
+  const { getRating, addRating, addComparison } = useRating();
+  const [showCompareMode, setShowCompareMode] = useState(false);
+  const [compareVariations, setCompareVariations] = useState<{ a: number; b: number } | null>(null);
 
   const selectedTemplate = TEMPLATES.find((t) => t.id === selectedTemplateId)!;
 
@@ -376,6 +385,38 @@ export default function App() {
     return new Date(ts).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
   };
 
+  const handleRateVariation = (variationIndex: number, ratingType: RatingType) => {
+    const copyId = `variation-${selectedTemplateId}-${variationIndex}`;
+    addRating(copyId, ratingType);
+  };
+
+  const handleOpenCompare = (indexA: number, indexB: number) => {
+    setCompareVariations({ a: indexA, b: indexB });
+    setShowCompareMode(true);
+  };
+
+  const handleSelectWinner = (winner: 'a' | 'b' | 'tie') => {
+    if (!compareVariations || !generatedCopy) return;
+
+    const variations = parseVariations(generatedCopy);
+    if (!variations) return;
+
+    const varA = variations[compareVariations.a];
+    const varB = variations[compareVariations.b];
+
+    addComparison({
+      itemA: {
+        copyId: `variation-${selectedTemplateId}-${compareVariations.a}`,
+        content: varA.raw,
+      },
+      itemB: {
+        copyId: `variation-${selectedTemplateId}-${compareVariations.b}`,
+        content: varB.raw,
+      },
+      winner,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-navy-deep)] text-[var(--color-pure-white)] font-sans selection:bg-[var(--color-gold-premium)] selection:text-[var(--color-navy-deep)]">
       {/* Header */}
@@ -600,41 +641,22 @@ export default function App() {
               ))}
             </div>
 
-            <div className="mt-8 space-y-3">
-              <button
-                id="generate-copy-btn"
-                onClick={handleGenerateCopy}
-                disabled={isGeneratingCopy}
-                className="w-full bg-[var(--color-gold-premium)] hover:bg-[#F2B915] text-[var(--color-navy-deep)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(220,164,5,0.2)] hover:shadow-[0_0_30px_rgba(220,164,5,0.4)]"
-              >
-                {isGeneratingCopy ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Gerando Copy...
-                  </>
-                ) : (
-                  <>
-                    <Type className="w-5 h-5" />
-                    Gerar Copy de Alta Conversão
-                  </>
-                )}
-              </button>
-
+            <div className="mt-8">
               <button
                 id="generate-image-btn"
                 onClick={handleGenerateImage}
                 disabled={isGeneratingImage}
-                className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-[var(--color-gold-premium)] hover:bg-[#F2B915] text-[var(--color-navy-deep)] font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(220,164,5,0.2)] hover:shadow-[0_0_30px_rgba(220,164,5,0.4)]"
               >
                 {isGeneratingImage ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Gerando Imagem...
+                    Gerando Ad...
                   </>
                 ) : (
                   <>
                     <ImageIcon className="w-5 h-5" />
-                    Gerar Imagem Premium
+                    Gerar Ad Premium
                   </>
                 )}
               </button>
@@ -657,43 +679,24 @@ export default function App() {
               <h2 className="font-serif text-xl text-[var(--color-gold-premium)]">Output Gerado</h2>
               <div className="flex items-center gap-2 flex-wrap justify-end">
                 {generatedImage && (
-                  <button
-                    id="download-btn"
-                    onClick={handleDownload}
-                    className="flex items-center gap-1.5 text-sm text-[var(--color-navy-deep)] bg-[var(--color-gold-premium)] hover:bg-[#F2B915] transition-colors px-3 py-1.5 rounded-lg font-medium"
-                  >
-                    <Download className="w-4 h-4" />
-                    Baixar Imagem
-                  </button>
-                )}
-                {generatedCopy && (
                   <>
                     <button
-                      onClick={handleCopyClean}
-                      title="Copia sem formatação markdown — pronto para colar no Meta Ads"
-                      className="flex items-center gap-1.5 text-sm text-[var(--color-gray-slate)] hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5 border border-white/10 hover:border-white/20"
+                      id="download-btn"
+                      onClick={handleDownload}
+                      className="flex items-center gap-1.5 text-sm text-[var(--color-navy-deep)] bg-[var(--color-gold-premium)] hover:bg-[#F2B915] transition-colors px-3 py-1.5 rounded-lg font-medium"
                     >
-                      {copiedClean ? <><Check className="w-4 h-4 text-green-400" />Copiado!</> : <><ClipboardCheck className="w-4 h-4" />Copiar limpo</>}
+                      <Download className="w-4 h-4" />
+                      Baixar Ad
                     </button>
                     <button
-                      id="copy-btn"
-                      onClick={handleCopy}
+                      onClick={handleExportJSON}
+                      title="Exporta imagem em JSON para integração com outras ferramentas"
                       className="flex items-center gap-1.5 text-sm text-[var(--color-gray-slate)] hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
                     >
-                      {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
-                      {copied ? 'Copiado!' : 'Copiar'}
+                      <FileJson className="w-4 h-4" />
+                      JSON
                     </button>
                   </>
-                )}
-                {(generatedCopy || generatedImage) && (
-                  <button
-                    onClick={handleExportJSON}
-                    title="Exporta copy + imagem em JSON para integração com outras ferramentas"
-                    className="flex items-center gap-1.5 text-sm text-[var(--color-gray-slate)] hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
-                  >
-                    <FileJson className="w-4 h-4" />
-                    JSON
-                  </button>
                 )}
               </div>
             </div>
@@ -712,129 +715,43 @@ export default function App() {
                     {isGeneratingCopy ? 'Aplicando Brand Voice Rentabiliza...' : 'Renderizando criativo premium...'}
                   </p>
                 </div>
-              ) : (generatedCopy || generatedImage) ? (
-                <div className="space-y-8">
-                  {generatedImage && (
-                    <div className="space-y-4">
-                      <div className="rounded-xl overflow-hidden border border-white/10 bg-black/20 shadow-2xl relative group">
-                        <img
-                          src={generatedImage}
-                          alt="Criativo Gerado"
-                          className="w-full h-auto object-contain max-h-[500px]"
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
+              ) : generatedImage ? (
+                <div className="space-y-4">
+                  <div className="rounded-xl overflow-hidden border border-white/10 bg-black/20 shadow-2xl relative group">
+                    <img
+                      src={generatedImage}
+                      alt="Ad Gerado"
+                      className="w-full h-auto object-contain max-h-[500px]"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
 
-                      <div className="bg-white/5 border border-white/10 rounded-xl p-4">
-                        <label htmlFor="overlayText" className="block text-sm font-medium text-[var(--color-gold-premium)] mb-2 flex items-center gap-2">
-                          <Type className="w-4 h-4" />
-                          Texto no Criativo (Editável)
-                        </label>
-                        <input
-                          type="text"
-                          id="overlayText"
-                          value={overlayText}
-                          onChange={(e) => setOverlayText(e.target.value)}
-                          placeholder="Cole aqui a melhor headline gerada na copy..."
-                          className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-gold-premium)] focus:ring-1 focus:ring-[var(--color-gold-premium)] transition-all"
-                        />
-                        <p className="text-xs text-[var(--color-gray-slate)] mt-2">
-                          O texto acima é renderizado automaticamente dentro da imagem.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                  {generatedCopy && (() => {
-                    const variations = parseVariations(generatedCopy);
-                    if (variations) {
-                      return (
-                        <div className="space-y-3">
-                          <p className="text-xs text-[var(--color-gray-slate)] uppercase tracking-wider font-mono">
-                            {variations.length} variações geradas — clique para selecionar
-                          </p>
-                          {variations.map((v, i) => {
-                            const isSelected = selectedVariation === i;
-                            return (
-                              <div
-                                key={i}
-                                onClick={() => setSelectedVariation(isSelected ? null : i)}
-                                className={`rounded-xl border p-5 cursor-pointer transition-all duration-200 ${
-                                  isSelected
-                                    ? 'border-[var(--color-gold-premium)] bg-[var(--color-gold-premium)]/5'
-                                    : 'border-white/10 hover:border-white/20 bg-white/3 hover:bg-white/5'
-                                }`}
-                              >
-                                <div className="flex items-start justify-between gap-3 mb-3">
-                                  <span className={`text-xs font-mono px-2 py-1 rounded-md ${
-                                    isSelected
-                                      ? 'bg-[var(--color-gold-premium)]/20 text-[var(--color-gold-premium)]'
-                                      : 'bg-white/10 text-[var(--color-gray-slate)]'
-                                  }`}>
-                                    {v.title}
-                                  </span>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      navigator.clipboard.writeText(stripMarkdown(v.raw));
-                                      setCopiedVariation(i);
-                                      setTimeout(() => setCopiedVariation(null), 2000);
-                                    }}
-                                    className="flex items-center gap-1 text-xs text-[var(--color-gray-slate)] hover:text-white transition-colors flex-shrink-0"
-                                  >
-                                    {copiedVariation === i
-                                      ? <><Check className="w-3 h-3 text-green-400" /> Copiado</>
-                                      : <><Copy className="w-3 h-3" /> Copiar</>
-                                    }
-                                  </button>
-                                </div>
-                                <p className={`font-serif text-lg font-semibold mb-2 leading-snug ${
-                                  isSelected ? 'text-[var(--color-gold-premium)]' : 'text-white'
-                                }`}>
-                                  {v.headline}
-                                </p>
-                                {v.body && (
-                                  <p className="text-sm text-white/70 leading-relaxed mb-3">{v.body}</p>
-                                )}
-                                {v.cta && (
-                                  <span className="inline-block text-xs border border-white/20 text-[var(--color-gray-slate)] rounded-lg px-3 py-1">
-                                    CTA: {v.cta}
-                                  </span>
-                                )}
-                              </div>
-                            );
-                          })}
-                          {selectedVariation !== null && (
-                            <button
-                              onClick={() => {
-                                navigator.clipboard.writeText(variations[selectedVariation].raw);
-                                setCopied(true);
-                                setTimeout(() => setCopied(false), 2000);
-                              }}
-                              className="w-full mt-2 py-3 rounded-xl border border-[var(--color-gold-premium)]/40 text-[var(--color-gold-premium)] text-sm font-medium hover:bg-[var(--color-gold-premium)]/10 transition-all flex items-center justify-center gap-2"
-                            >
-                              {copied ? <><Check className="w-4 h-4" /> Copiado!</> : <><Copy className="w-4 h-4" /> Copiar variação selecionada</>}
-                            </button>
-                          )}
-                        </div>
-                      );
-                    }
-                    return (
-                      <div className="prose prose-invert prose-gold max-w-none">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {generatedCopy}
-                        </ReactMarkdown>
-                      </div>
-                    );
-                  })()}
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <label htmlFor="overlayText" className="block text-sm font-medium text-[var(--color-gold-premium)] mb-2 flex items-center gap-2">
+                      <Type className="w-4 h-4" />
+                      Headline do Ad (Editável)
+                    </label>
+                    <input
+                      type="text"
+                      id="overlayText"
+                      value={overlayText}
+                      onChange={(e) => setOverlayText(e.target.value)}
+                      placeholder="Edite a headline que aparece no Ad..."
+                      className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-gold-premium)] focus:ring-1 focus:ring-[var(--color-gold-premium)] transition-all"
+                    />
+                    <p className="text-xs text-[var(--color-gray-slate)] mt-2">
+                      A headline acima é renderizada automaticamente no Ad.
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-[var(--color-gray-slate)]/50 text-center px-8">
                   <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
-                    <Sparkles className="w-8 h-8 text-white/20" />
+                    <ImageIcon className="w-8 h-8 text-white/20" />
                   </div>
-                  <p className="font-serif text-xl mb-2 text-white/40">Nenhum conteúdo gerado ainda.</p>
+                  <p className="font-serif text-xl mb-2 text-white/40">Nenhum Ad gerado ainda.</p>
                   <p className="text-sm max-w-md">
-                    Preencha o contexto da campanha ao lado e gere o Copy e/ou a Imagem para seus anúncios.
+                    Preencha o contexto da campanha ao lado e gere seu Ad Premium com imagem + headline.
                   </p>
                   {history.length > 0 && (
                     <button
@@ -851,6 +768,45 @@ export default function App() {
           </section>
         </div>
       </main>
+
+      {/* Compare Mode Modal */}
+      {showCompareMode && generatedCopy && compareVariations !== null && (() => {
+        const variations = parseVariations(generatedCopy);
+        if (!variations) return null;
+
+        const varA = variations[compareVariations.a];
+        const varB = variations[compareVariations.b];
+
+        return (
+          <CompareMode
+            isOpen={showCompareMode}
+            onClose={() => {
+              setShowCompareMode(false);
+              setCompareVariations(null);
+            }}
+            itemA={{
+              id: `variation-${selectedTemplateId}-${compareVariations.a}`,
+              title: varA.title,
+              content: varA.raw,
+            }}
+            itemB={{
+              id: `variation-${selectedTemplateId}-${compareVariations.b}`,
+              title: varB.title,
+              content: varB.raw,
+            }}
+            currentRatings={{
+              [`variation-${selectedTemplateId}-${compareVariations.a}`]: getRating(
+                `variation-${selectedTemplateId}-${compareVariations.a}`
+              ),
+              [`variation-${selectedTemplateId}-${compareVariations.b}`]: getRating(
+                `variation-${selectedTemplateId}-${compareVariations.b}`
+              ),
+            }}
+            onRate={handleRateVariation}
+            onSelectWinner={handleSelectWinner}
+          />
+        );
+      })()}
     </div>
   );
 }
