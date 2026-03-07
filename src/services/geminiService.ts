@@ -18,11 +18,11 @@ export async function generateAdCopy(prompt: string): Promise<string> {
   try {
     const ai = getAIClient();
     const response = await ai.models.generateContent({
-      model: 'gemini-3.1-pro-preview',
+      model: 'gemini-2.5-pro-preview',
       contents: prompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.7,
+        temperature: 0.9,
       },
     });
     
