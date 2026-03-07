@@ -18,7 +18,7 @@ export async function generateAdCopy(prompt: string): Promise<string> {
   try {
     const ai = getAIClient();
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-pro-preview',
+      model: 'gemini-2.0-flash',
       contents: prompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
