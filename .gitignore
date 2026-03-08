@@ -6,3 +6,8 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Test files with potential secrets
+test-*.mjs
+quick-test.mjs
+list-models.mjs
