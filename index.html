@@ -409,10 +409,40 @@
             document.getElementById('emptyState').style.display = 'none';
 
             try {
-                const response = await fetch(`${API_URL}/api/generate`, {
+                // Get API key from localStorage or prompt user
+                let apiKey = localStorage.getItem('ANTHROPIC_API_KEY');
+
+                if (!apiKey) {
+                    apiKey = prompt('🔑 Cole sua API Key do Claude:\nhttps://console.anthropic.com/keys');
+                    if (!apiKey) {
+                        showError('API Key é necessária para usar esta aplicação');
+                        throw new Error('No API key provided');
+                    }
+                    localStorage.setItem('ANTHROPIC_API_KEY', apiKey);
+                }
+
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ product, audience, agent, tone }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-3-5-sonnet-20241022',
+                        max_tokens: 300,
+                        system: `You are ${agent}, a legendary copywriter.
+Write SHORT, PUNCHY ad copy (max 3 sentences) for:
+- Product: ${product}
+- Audience: ${audience}
+- Tone: ${tone}
+
+Focus on: Opening hook, unique benefit, call-to-action.`,
+                        messages: [{
+                            role: 'user',
+                            content: `Create compelling ad copy for "${product}" targeting "${audience}".`
+                        }]
+                    }),
                     signal: AbortSignal.timeout(55000)
                 });
 
@@ -420,11 +450,19 @@
 
                 document.getElementById('loading').classList.remove('show');
 
-                if (data.success && data.copy) {
-                    displayResult(data);
+                if (response.ok && data.content && data.content[0]?.text) {
+                    const copy = data.content[0].text;
+                    displayResult({
+                        success: true,
+                        agent,
+                        product,
+                        audience,
+                        tone,
+                        copy
+                    });
                     Toast.success('✅ Copy gerado com sucesso!');
                 } else {
-                    showError(data.error || 'Erro desconhecido');
+                    showError(data.error?.message || 'Erro desconhecido');
                     Toast.error('❌ Falha ao gerar');
                 }
             } catch (err) {
