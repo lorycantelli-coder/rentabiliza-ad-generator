@@ -1,0 +1,56 @@
+# Vercel Build Ignore Rules
+
+# Development files
+.env.local
+.env.development
+src/
+docs/
+
+# Node modules (handled by Vercel)
+node_modules/
+
+# Test files
+*.test.js
+*.spec.js
+jest.config.cjs
+coverage/
+
+# Development configs
+vite.config.ts
+tsconfig.json
+.gitignore
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temporary files
+.tmp/
+*.tmp
+.DS_Store
+
+# Docker (not needed in Vercel)
+Dockerfile
+docker-compose.yml
+nginx.conf
+
+# PM2 (not needed in Vercel)
+ecosystem.config.js
+
+# Documentation (optional, can keep if needed)
+# *.md
+
+# Git
+.git/
+.gitattributes
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System
+__pycache__/
+.pytest_cache/

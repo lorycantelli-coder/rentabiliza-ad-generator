@@ -1,0 +1,46 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build 2>/dev/null || echo 'No build needed'",
+  "outputDirectory": "dist",
+  "env": {
+    "ANTHROPIC_API_KEY": "@anthropic_api_key"
+  },
+  "regions": ["iad1", "sfo1"],
+  "functions": {
+    "api/generate.js": {
+      "memory": 1024,
+      "maxDuration": 60,
+      "regions": ["iad1"]
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/dist/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, immutable"
+        }
+      ]
+    }
+  ]
+}
