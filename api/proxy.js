@@ -25,6 +25,12 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: "API key is required" });
     }
 
+    if (!product || !audience || !agent) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    console.log("Proxy: Received request for", agent);
+
     // Chamar Claude API do servidor (sem CORS)
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -46,19 +52,44 @@ module.exports = async (req, res) => {
       }),
     });
 
-    const data = await response.json();
+    const contentType = response.headers.get("content-type");
+    console.log("Claude API Response Status:", response.status);
+    console.log("Claude API Content-Type:", contentType);
+
+    const text = await response.text();
+    console.log("Claude API Response Text:", text.substring(0, 200));
+
+    if (!contentType || !contentType.includes("application/json")) {
+      console.error("Invalid content type or response:", contentType);
+      return res.status(response.status).json({
+        error: `Claude API error: ${text}`,
+        status: response.status,
+      });
+    }
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error("JSON Parse Error:", e.message);
+      return res.status(500).json({
+        error: `Failed to parse Claude API response: ${e.message}`,
+      });
+    }
 
     if (!response.ok) {
+      console.error("Claude API Error:", data);
       return res.status(response.status).json({
         error: data.error?.message || "Claude API error",
       });
     }
 
+    console.log("Success! Content:", data.content?.[0]?.type);
     res.status(200).json(data);
   } catch (error) {
-    console.error("Proxy error:", error);
+    console.error("Proxy error:", error.message);
     res.status(500).json({
-      error: error.message || "Internal server error",
+      error: `Server error: ${error.message}`,
     });
   }
 };
