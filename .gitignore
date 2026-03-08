@@ -11,3 +11,4 @@ coverage/
 test-*.mjs
 quick-test.mjs
 list-models.mjs
+.vercel

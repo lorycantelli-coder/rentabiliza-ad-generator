@@ -5,12 +5,10 @@
   "env": {
     "ANTHROPIC_API_KEY": "@anthropic_api_key"
   },
-  "regions": ["iad1", "sfo1"],
   "functions": {
     "api/generate.js": {
       "memory": 1024,
-      "maxDuration": 60,
-      "regions": ["iad1"]
+      "maxDuration": 60
     }
   },
   "rewrites": [
