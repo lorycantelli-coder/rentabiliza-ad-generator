@@ -1,221 +1,123 @@
 /**
  * Vercel Serverless Function - Claude Ad Copy Generator
- * Production-ready endpoint for Rentabiliza Ad Generator
- *
- * Deploy: Automatic via Vercel
- * Timeout: 60 seconds
- * Memory: 1024 MB
+ * Simplified version for better Vercel compatibility
  */
 
-const Anthropic = require("@anthropic-ai/sdk");
+module.exports = async (req, res) => {
+  // CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Content-Type", "application/json");
 
-// Initialize Anthropic client
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
-// Agent configurations
-const AGENTS = {
-  "Halbert": {
-    persona:
-      "Direct response copywriter expert in high-converting ads. Known for brutal honesty and ROI focus.",
-    style:
-      "URGENT, benefit-focused, problem-solution-result format. Use power words: FREE, GUARANTEED, EXCLUSIVE, LIMITED TIME. Include specific results.",
-  },
-  "Wiebe": {
-    persona:
-      "Master of psychological triggers and emotional storytelling. Expert in pain point identification.",
-    style:
-      "Storytelling-driven, pattern-interrupt opening, agitate-solve-close framework. Deep emotional hooks.",
-  },
-  "Bencivenga": {
-    persona:
-      "Long-form copy master. Creates desire through detailed objection handling and proof elements.",
-    style:
-      "Educational, comprehensive, builds unshakeable conviction. Stack objections and overcome methodically.",
-  },
-};
-
-// CORS headers
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Content-Type": "application/json",
-};
-
-/**
- * Health check endpoint
- */
-function handleHealthCheck(req, res) {
-  res.status(200).json({
-    status: "healthy",
-    timestamp: new Date().toISOString(),
-    service: "Rentabiliza Ad Generator API",
-    version: "1.0.0",
-  });
-}
-
-/**
- * Main generate endpoint - calls Claude API
- */
-async function handleGenerate(req, res) {
+  // Handle OPTIONS
   if (req.method === "OPTIONS") {
-    res.status(200).set(corsHeaders).end();
-    return;
+    return res.status(200).end();
   }
 
+  // Health check
+  if (req.method === "GET") {
+    return res.status(200).json({
+      status: "healthy",
+      service: "Rentabiliza Ad Generator API",
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  // POST - Generate copy
   if (req.method !== "POST") {
-    res.status(405).json({ error: "Method not allowed. Use POST." });
-    return;
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
     const { product, audience, agent = "Halbert", tone = "professional" } =
       req.body;
 
-    // Validation
-    if (!product || typeof product !== "string") {
-      res.status(400).json({ error: "Product is required and must be a string" });
-      return;
+    if (!product || !audience) {
+      return res
+        .status(400)
+        .json({ error: "product and audience are required" });
     }
 
-    if (!audience || typeof audience !== "string") {
-      res.status(400).json({ error: "Audience is required and must be a string" });
-      return;
-    }
+    const AGENTS = {
+      Halbert:
+        "Direct response copywriter. URGENT, benefit-focused, results-driven.",
+      Wiebe: "Storytelling expert. Emotional hooks, pattern interrupts.",
+      Bencivenga:
+        "Long-form master. Educational, conviction-building, comprehensive.",
+    };
 
     if (!AGENTS[agent]) {
-      res.status(400).json({
-        error: `Invalid agent. Choose from: ${Object.keys(AGENTS).join(", ")}`,
+      return res.status(400).json({
+        error: `Invalid agent. Use: ${Object.keys(AGENTS).join(", ")}`,
       });
-      return;
     }
 
-    const agentConfig = AGENTS[agent];
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      console.error("ANTHROPIC_API_KEY not configured");
+      return res.status(500).json({
+        error: "API configuration missing",
+        success: false,
+      });
+    }
 
-    // Build prompt
-    const systemPrompt = `You are ${agent}, a legendary copywriter.
-${agentConfig.persona}
-
-STYLE GUIDE: ${agentConfig.style}
-
-Generate SHORT, PUNCHY ad copy (max 3 sentences) that:
-1. Opens with a problem or curiosity gap
-2. Delivers a unique benefit
-3. Calls to action (CTA)
-
-Tone: ${tone}`;
-
-    const userPrompt = `Product: ${product}
-Target Audience: ${audience}
-
-Write a compelling ad copy that speaks directly to ${audience}.`;
-
-    // Call Claude API with timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 55000); // 55s timeout for API call + buffer
-
-    const message = await client.messages.create(
-      {
+    // Call Claude API
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
         model: "claude-3-5-sonnet-20241022",
         max_tokens: 300,
-        system: systemPrompt,
+        system: `You are ${agent}, a legendary copywriter.
+${AGENTS[agent]}
+
+Write SHORT, PUNCHY ad copy (max 3 sentences) for:
+- Product: ${product}
+- Audience: ${audience}
+- Tone: ${tone}
+
+Focus on: Opening hook, unique benefit, call-to-action.`,
         messages: [
           {
             role: "user",
-            content: userPrompt,
+            content: `Create compelling ad copy for "${product}" targeting "${audience}".`,
           },
         ],
-      },
-      { signal: controller.signal }
-    );
+      }),
+    });
 
-    clearTimeout(timeoutId);
+    const data = await response.json();
 
-    const content = message.content[0].type === "text" ? message.content[0].text : "";
-
-    res.status(200)
-      .set(corsHeaders)
-      .json({
-        success: true,
-        agent,
-        product,
-        audience,
-        tone,
-        copy: content,
-        timestamp: new Date().toISOString(),
-        usage: {
-          input_tokens: message.usage.input_tokens,
-          output_tokens: message.usage.output_tokens,
-        },
+    if (!response.ok) {
+      console.error("Claude API error:", data);
+      return res.status(response.status).json({
+        error: data.error?.message || "Claude API error",
+        success: false,
       });
-  } catch (error) {
-    console.error("[API Error]", {
-      message: error.message,
-      code: error.code,
-      status: error.status,
+    }
+
+    const copy =
+      data.content[0]?.type === "text" ? data.content[0].text : "";
+
+    return res.status(200).json({
+      success: true,
+      agent,
+      product,
+      audience,
+      tone,
+      copy,
       timestamp: new Date().toISOString(),
     });
-
-    // Handle different error types
-    if (error.name === "AbortError") {
-      res.status(504).set(corsHeaders).json({
-        error: "Request timeout - took too long to generate copy",
-        status: 504,
-      });
-    } else if (error.status === 429) {
-      res.status(429).set(corsHeaders).json({
-        error: "Rate limited - too many requests. Try again in a few seconds.",
-        status: 429,
-      });
-    } else if (error.status === 401) {
-      res.status(401).set(corsHeaders).json({
-        error: "Invalid API key. Check your ANTHROPIC_API_KEY.",
-        status: 401,
-      });
-    } else if (error.message.includes("API")) {
-      res.status(503).set(corsHeaders).json({
-        error: "Claude API error. Please try again.",
-        status: 503,
-      });
-    } else {
-      res.status(500).set(corsHeaders).json({
-        error: "Internal server error",
-        status: 500,
-      });
-    }
-  }
-}
-
-/**
- * Main handler - routes requests
- */
-module.exports = async (req, res) => {
-  // Set CORS headers for all responses
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    res.setHeader(key, value);
-  });
-
-  try {
-    const { pathname } = new URL(req.url, `http://${req.headers.host}`);
-
-    if (pathname === "/api/health" || pathname === "/health") {
-      return handleHealthCheck(req, res);
-    }
-
-    if (pathname === "/api/generate" || pathname === "/generate") {
-      return handleGenerate(req, res);
-    }
-
-    res.status(404).json({
-      error: "Not found",
-      available_endpoints: ["/api/health", "/api/generate"],
-    });
   } catch (error) {
-    console.error("[Handler Error]", error);
-    res.status(500).json({
-      error: "Server error",
+    console.error("API Error:", error);
+    return res.status(500).json({
+      error: error.message || "Internal server error",
+      success: false,
     });
   }
 };
