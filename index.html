@@ -304,22 +304,18 @@
             document.getElementById('emptyState').style.display = 'none';
 
             try {
-                console.log('Calling Claude API...');
-                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                console.log('Calling proxy API...');
+                const response = await fetch('/api/proxy', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': apiKey,
-                        'anthropic-version': '2023-06-01'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        model: 'claude-3-5-sonnet-20241022',
-                        max_tokens: 300,
-                        system: `You are ${agent}, a legendary copywriter. Write SHORT, PUNCHY ad copy (max 3 sentences).`,
-                        messages: [{
-                            role: 'user',
-                            content: `Product: ${product}\nAudience: ${audience}\nTone: ${tone}\n\nCreate compelling ad copy.`
-                        }]
+                        apiKey,
+                        product,
+                        audience,
+                        agent,
+                        tone
                     })
                 });
 
