@@ -54,3 +54,4 @@ ecosystem.config.js
 # System
 __pycache__/
 .pytest_cache/
+# Vercel env vars configured - Dom  8 Mar 2026 15:58:15 -03
