@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm run build 2>/dev/null || echo 'No build needed'",
-  "outputDirectory": "dist",
+  "buildCommand": "npm run build 2>/dev/null || true",
+  "public": true,
   "functions": {
     "api/generate.js": {
       "memory": 1024,
